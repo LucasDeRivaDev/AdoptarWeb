@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install:*)",
+      "Bash(npx tsc:*)",
+      "Bash(node -e \"const p = require\\('./node_modules/react-leaflet/package.json'\\); console.log\\('react-leaflet:', p.version\\)\")",
+      "Bash(node -e \"const p = require\\('./node_modules/leaflet/package.json'\\); console.log\\('leaflet:', p.version\\)\")",
+      "Bash(node -e \"const p = require\\('./node_modules/react/package.json'\\); console.log\\('react:', p.version\\)\")"
+    ]
+  }
+}

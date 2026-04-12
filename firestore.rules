@@ -1,0 +1,59 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ---- USUARIOS ----------------------------------------
+    // Cualquiera puede leer perfiles (para mostrar nombre del rescatista)
+    // Solo el propio usuario puede editar su perfil
+    match /users/{userId} {
+      allow read: if true;
+      allow create: if request.auth != null && request.auth.uid == userId;
+      allow update: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // ---- GATOS -------------------------------------------
+    // Cualquiera puede leer gatos disponibles
+    // Solo usuarios logueados pueden publicar
+    // Solo el dueño puede editar/borrar
+    match /cats/{catId} {
+      allow read: if true;
+      allow create: if request.auth != null;
+      allow update: if request.auth != null && (
+        request.auth.uid == resource.data.ownerId ||
+        // permite actualizar fotos justo después de crear
+        request.auth.uid == request.resource.data.ownerId
+      );
+      allow delete: if request.auth != null && request.auth.uid == resource.data.ownerId;
+    }
+
+    // ---- SOLICITUDES DE ADOPCIÓN -------------------------
+    // El solicitante y el dueño del gato pueden leer
+    // Solo usuarios logueados pueden crear
+    // Solo el dueño del gato puede aprobar/rechazar
+    match /applications/{appId} {
+      allow read: if request.auth != null && (
+        request.auth.uid == resource.data.applicantId ||
+        request.auth.uid == resource.data.ownerId
+      );
+      allow create: if request.auth != null;
+      allow update: if request.auth != null && request.auth.uid == resource.data.ownerId;
+    }
+
+    // ---- ADOPCIONES --------------------------------------
+    // Solo el adoptante y el rescatista original pueden leer
+    match /adoptions/{adoptionId} {
+      allow read: if request.auth != null && (
+        request.auth.uid == resource.data.adopterId ||
+        request.auth.uid == resource.data.originalOwnerId
+      );
+      allow create: if request.auth != null;
+    }
+
+    // ---- TRACKING LOGS -----------------------------------
+    // Solo el adoptante puede leer y escribir sus logs
+    match /tracking_logs/{logId} {
+      allow read, write: if request.auth != null && request.auth.uid == resource.data.adopterId;
+      allow create: if request.auth != null;
+    }
+  }
+}

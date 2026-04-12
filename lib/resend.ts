@@ -6,13 +6,14 @@
 
 import { Resend } from 'resend';
 
-// Resend solo se inicializa en el servidor (API Routes / Server Components)
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Si no hay API key, las funciones de email no hacen nada (fallan silenciosamente)
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 const FROM = process.env.RESEND_FROM_EMAIL ?? 'noreply@adopcionweb.com';
 
 // ---- BIENVENIDA AL ADOPTANTE ------------------------------
 
 export async function sendWelcomeEmail(to: string, adopterName: string, catName: string) {
+  if (!resend) return;
   return resend.emails.send({
     from: FROM,
     to,
@@ -42,6 +43,7 @@ export async function sendVaccineReminderEmail(
   catName: string,
   adoptionId: string
 ) {
+  if (!resend) return;
   return resend.emails.send({
     from: FROM,
     to,
@@ -71,6 +73,7 @@ export async function sendCheckupReminderEmail(
   catName: string,
   adoptionId: string
 ) {
+  if (!resend) return;
   return resend.emails.send({
     from: FROM,
     to,
@@ -100,6 +103,7 @@ export async function sendApplicationNotificationEmail(
   catName: string,
   applicantName: string
 ) {
+  if (!resend) return;
   return resend.emails.send({
     from: FROM,
     to,

@@ -8,7 +8,8 @@
 export const revalidate = 300;
 
 import Link from 'next/link';
-import { getFeaturedCats, getPublicStats } from '@/lib/firebase/firestore';
+import { getFeaturedCats, getPublicStats, PublicStats } from '@/lib/firebase/firestore';
+import { Cat } from '@/types';
 import { CatCard } from '@/components/cats/CatCard';
 import { Button } from '@/components/ui/Button';
 import { StatsSection } from '@/components/home/StatsSection';
@@ -16,8 +17,8 @@ import { Heart, PawPrint, Shield, Bell } from 'lucide-react';
 
 export default async function HomePage() {
   // Cargar gatos destacados desde Firestore (server-side)
-  let featuredCats = [];
-  let stats = null;
+  let featuredCats: Cat[] = [];
+  let stats: PublicStats | null = null;
   try {
     [featuredCats, stats] = await Promise.all([
       getFeaturedCats(3),

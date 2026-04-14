@@ -7,7 +7,7 @@ import { Timestamp } from 'firebase/firestore';
 
 // ---- USUARIO -----------------------------------------------
 
-export type UserRole = 'adopter' | 'rescuer' | 'foundation' | 'admin';
+export type UserRole = 'adopter' | 'rescuer' | 'foundation' | 'admin' | 'banned';
 
 export interface UserProfile {
   id: string;

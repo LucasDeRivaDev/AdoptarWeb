@@ -13,12 +13,13 @@ import {
   adminGetAllCats,
   adminGetAllApplications,
   adminGetAllAdoptions,
+  adminSetUserRole,
 } from '@/lib/firebase/firestore';
 import { UserProfile, Cat, AdoptionApplication, Adoption } from '@/types';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { Badge } from '@/components/ui/Badge';
 import { formatRelativeDate, formatHousingType, getApplicationStatusLabel } from '@/lib/utils';
-import { Users, PawPrint, FileText, Heart, Search, ShieldCheck } from 'lucide-react';
+import { Users, PawPrint, FileText, Heart, Search, ShieldCheck, Ban, CheckCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 
@@ -31,6 +32,7 @@ const roleLabel: Record<string, string> = {
   rescuer: 'Rescatista',
   foundation: 'Fundación',
   admin: 'Admin',
+  banned: 'Baneado',
 };
 
 const roleColor: Record<string, 'coral' | 'sage' | 'amber' | 'gray'> = {
@@ -38,6 +40,7 @@ const roleColor: Record<string, 'coral' | 'sage' | 'amber' | 'gray'> = {
   rescuer: 'sage',
   foundation: 'coral',
   admin: 'amber',
+  banned: 'coral',
 };
 
 const statusColor: Record<string, 'coral' | 'sage' | 'amber' | 'gray'> = {
@@ -78,8 +81,11 @@ function SearchBar({ value, onChange, placeholder }: { value: string; onChange: 
 
 // ---- Tab: Usuarios ----
 
-function UsersTab({ users }: { users: UserProfile[] }) {
+function UsersTab({ users: initialUsers }: { users: UserProfile[] }) {
   const [search, setSearch] = useState('');
+  const [users, setUsers] = useState(initialUsers);
+  const [loadingId, setLoadingId] = useState<string | null>(null);
+
   const filtered = useMemo(() => {
     const q = search.toLowerCase();
     return users.filter((u) =>
@@ -89,13 +95,24 @@ function UsersTab({ users }: { users: UserProfile[] }) {
     );
   }, [users, search]);
 
+  async function toggleBan(u: UserProfile) {
+    const newRole = u.role === 'banned' ? 'adopter' : 'banned';
+    setLoadingId(u.id);
+    try {
+      await adminSetUserRole(u.id, newRole);
+      setUsers((prev) => prev.map((x) => x.id === u.id ? { ...x, role: newRole } : x));
+    } finally {
+      setLoadingId(null);
+    }
+  }
+
   return (
     <div>
       <SearchBar value={search} onChange={setSearch} placeholder="Buscar por nombre, email o ciudad..." />
       <div className="space-y-3">
         {filtered.length === 0 && <p className="text-center text-gray-400 py-10">Sin resultados</p>}
         {filtered.map((u) => (
-          <div key={u.id} className="bg-white rounded-2xl border border-gray-100 shadow-soft p-4 flex items-center gap-4">
+          <div key={u.id} className={cn('bg-white rounded-2xl border shadow-soft p-4 flex items-center gap-4', u.role === 'banned' ? 'border-red-200 opacity-60' : 'border-gray-100')}>
             {u.photoURL ? (
               <img src={u.photoURL} alt={u.name} className="w-10 h-10 rounded-full object-cover flex-shrink-0" />
             ) : (
@@ -115,6 +132,21 @@ function UsersTab({ users }: { users: UserProfile[] }) {
                 <span>{formatRelativeDate(u.createdAt)}</span>
               </div>
             </div>
+            {u.role !== 'admin' && (
+              <button
+                onClick={() => toggleBan(u)}
+                disabled={loadingId === u.id}
+                title={u.role === 'banned' ? 'Desbanear usuario' : 'Banear usuario'}
+                className={cn(
+                  'flex-shrink-0 p-2 rounded-xl transition-colors disabled:opacity-50',
+                  u.role === 'banned'
+                    ? 'text-sage-600 hover:bg-sage-50'
+                    : 'text-red-400 hover:bg-red-50'
+                )}
+              >
+                {u.role === 'banned' ? <CheckCircle size={18} /> : <Ban size={18} />}
+              </button>
+            )}
           </div>
         ))}
       </div>

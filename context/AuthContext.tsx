@@ -57,18 +57,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // Mostrar modal de términos si el usuario está logueado pero no aceptó
   const needsTerms = !loading && user && profile && !profile.acceptedTerms;
+  const isBanned = !loading && profile?.role === 'banned';
 
   return (
     <AuthContext.Provider value={{ user, profile, loading, refreshProfile }}>
-      {children}
-
-      {/* Modal de términos — bloquea la UI hasta que acepte */}
-      {needsTerms && (
-        <TermsModal
-          userId={user!.uid}
-          userName={profile!.name}
-          onAccepted={refreshProfile}
-        />
+      {isBanned ? (
+        <div className="min-h-screen flex items-center justify-center bg-cream-50 px-4">
+          <div className="text-center max-w-sm">
+            <div className="text-5xl mb-4">🚫</div>
+            <h1 className="text-xl font-bold text-gray-800 mb-2">Cuenta suspendida</h1>
+            <p className="text-gray-500 text-sm">Tu cuenta fue suspendida por el equipo de AdopcionWeb. Si creés que es un error, contactanos.</p>
+          </div>
+        </div>
+      ) : (
+        <>
+          {children}
+          {/* Modal de términos — bloquea la UI hasta que acepte */}
+          {needsTerms && (
+            <TermsModal
+              userId={user!.uid}
+              userName={profile!.name}
+              onAccepted={refreshProfile}
+            />
+          )}
+        </>
       )}
     </AuthContext.Provider>
   );

@@ -289,6 +289,10 @@ export async function getPublicStats(): Promise<PublicStats> {
 // ADMIN — queries sin filtros, acceso total
 // ============================================================
 
+export async function adminSetUserRole(uid: string, role: UserProfile['role']): Promise<void> {
+  await updateDoc(doc(db, 'users', uid), { role });
+}
+
 export async function adminGetAllUsers(): Promise<UserProfile[]> {
   const q = query(collection(db, 'users'), orderBy('createdAt', 'desc'));
   const snap = await getDocs(q);

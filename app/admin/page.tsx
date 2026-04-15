@@ -81,10 +81,52 @@ function SearchBar({ value, onChange, placeholder }: { value: string; onChange: 
 
 // ---- Tab: Usuarios ----
 
+function BanModal({ user, onConfirm, onCancel }: {
+  user: UserProfile;
+  onConfirm: (reason: string) => void;
+  onCancel: () => void;
+}) {
+  const [reason, setReason] = useState('');
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+      <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-6">
+        <h2 className="text-lg font-bold text-gray-800 mb-1">Banear usuario</h2>
+        <p className="text-sm text-gray-500 mb-4">
+          Escribí el motivo del ban para <strong>{user.name}</strong>. El usuario lo va a ver cuando intente entrar.
+        </p>
+        <textarea
+          value={reason}
+          onChange={(e) => setReason(e.target.value)}
+          placeholder="Ej: Comportamiento inapropiado, múltiples denuncias de otros usuarios..."
+          rows={3}
+          className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-red-300"
+        />
+        <div className="flex gap-3 mt-4 justify-end">
+          <button
+            onClick={onCancel}
+            className="px-4 py-2 text-sm rounded-xl border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors"
+          >
+            Cancelar
+          </button>
+          <button
+            onClick={() => onConfirm(reason.trim())}
+            disabled={!reason.trim()}
+            className="px-4 py-2 text-sm rounded-xl bg-red-500 text-white font-medium hover:bg-red-600 transition-colors disabled:opacity-40"
+          >
+            Confirmar ban
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function UsersTab({ users: initialUsers }: { users: UserProfile[] }) {
   const [search, setSearch] = useState('');
   const [users, setUsers] = useState(initialUsers);
   const [loadingId, setLoadingId] = useState<string | null>(null);
+  const [banTarget, setBanTarget] = useState<UserProfile | null>(null);
 
   const filtered = useMemo(() => {
     const q = search.toLowerCase();
@@ -95,12 +137,22 @@ function UsersTab({ users: initialUsers }: { users: UserProfile[] }) {
     );
   }, [users, search]);
 
-  async function toggleBan(u: UserProfile) {
-    const newRole = u.role === 'banned' ? 'adopter' : 'banned';
+  async function handleBan(u: UserProfile, reason: string) {
+    setBanTarget(null);
     setLoadingId(u.id);
     try {
-      await adminSetUserRole(u.id, newRole);
-      setUsers((prev) => prev.map((x) => x.id === u.id ? { ...x, role: newRole } : x));
+      await adminSetUserRole(u.id, 'banned', reason);
+      setUsers((prev) => prev.map((x) => x.id === u.id ? { ...x, role: 'banned', banReason: reason } : x));
+    } finally {
+      setLoadingId(null);
+    }
+  }
+
+  async function handleUnban(u: UserProfile) {
+    setLoadingId(u.id);
+    try {
+      await adminSetUserRole(u.id, 'adopter');
+      setUsers((prev) => prev.map((x) => x.id === u.id ? { ...x, role: 'adopter', banReason: undefined } : x));
     } finally {
       setLoadingId(null);
     }
@@ -108,6 +160,13 @@ function UsersTab({ users: initialUsers }: { users: UserProfile[] }) {
 
   return (
     <div>
+      {banTarget && (
+        <BanModal
+          user={banTarget}
+          onConfirm={(reason) => handleBan(banTarget, reason)}
+          onCancel={() => setBanTarget(null)}
+        />
+      )}
       <SearchBar value={search} onChange={setSearch} placeholder="Buscar por nombre, email o ciudad..." />
       <div className="space-y-3">
         {filtered.length === 0 && <p className="text-center text-gray-400 py-10">Sin resultados</p>}
@@ -131,10 +190,13 @@ function UsersTab({ users: initialUsers }: { users: UserProfile[] }) {
                 {u.location && <span>📍 {u.location}</span>}
                 <span>{formatRelativeDate(u.createdAt)}</span>
               </div>
+              {u.role === 'banned' && u.banReason && (
+                <p className="mt-1 text-xs text-red-400 italic">Motivo: {u.banReason}</p>
+              )}
             </div>
             {u.role !== 'admin' && (
               <button
-                onClick={() => toggleBan(u)}
+                onClick={() => u.role === 'banned' ? handleUnban(u) : setBanTarget(u)}
                 disabled={loadingId === u.id}
                 title={u.role === 'banned' ? 'Desbanear usuario' : 'Banear usuario'}
                 className={cn(

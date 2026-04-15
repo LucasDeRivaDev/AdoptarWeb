@@ -22,6 +22,7 @@ export interface UserProfile {
   location?: string;
   bio?: string;
   createdAt: Timestamp;
+  banReason?: string;
 }
 
 // ---- GATO --------------------------------------------------

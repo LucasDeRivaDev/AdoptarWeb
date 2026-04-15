@@ -66,7 +66,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           <div className="text-center max-w-sm">
             <div className="text-5xl mb-4">🚫</div>
             <h1 className="text-xl font-bold text-gray-800 mb-2">Cuenta suspendida</h1>
-            <p className="text-gray-500 text-sm">Tu cuenta fue suspendida por el equipo de AdopcionWeb. Si creés que es un error, contactanos.</p>
+            {profile?.banReason ? (
+              <div className="bg-red-50 border border-red-100 rounded-xl px-4 py-3 mb-4 text-left">
+                <p className="text-xs font-semibold text-red-400 uppercase tracking-wide mb-1">Motivo</p>
+                <p className="text-sm text-gray-700">{profile.banReason}</p>
+              </div>
+            ) : (
+              <p className="text-gray-500 text-sm mb-4">Tu cuenta fue suspendida por el equipo de AdoptarWeb.</p>
+            )}
+            <p className="text-gray-400 text-sm">
+              Si creés que es un error, escribinos a{' '}
+              <a
+                href="mailto:LucasDeRiviaDev@gmail.com"
+                className="text-coral-500 font-medium hover:underline"
+              >
+                LucasDeRiviaDev@gmail.com
+              </a>
+            </p>
           </div>
         </div>
       ) : (

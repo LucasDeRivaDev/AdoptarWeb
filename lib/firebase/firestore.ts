@@ -289,8 +289,14 @@ export async function getPublicStats(): Promise<PublicStats> {
 // ADMIN — queries sin filtros, acceso total
 // ============================================================
 
-export async function adminSetUserRole(uid: string, role: UserProfile['role']): Promise<void> {
-  await updateDoc(doc(db, 'users', uid), { role });
+export async function adminSetUserRole(uid: string, role: UserProfile['role'], banReason?: string): Promise<void> {
+  const data: Record<string, unknown> = { role };
+  if (role === 'banned' && banReason) {
+    data.banReason = banReason;
+  } else {
+    data.banReason = null;
+  }
+  await updateDoc(doc(db, 'users', uid), data);
 }
 
 export async function adminGetAllUsers(): Promise<UserProfile[]> {

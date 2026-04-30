@@ -8,7 +8,9 @@ import { Resend } from 'resend';
 
 // Si no hay API key, las funciones de email no hacen nada (fallan silenciosamente)
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
-const FROM = process.env.RESEND_FROM_EMAIL ?? 'noreply@adopcionweb.com';
+// En plan gratuito de Resend sin dominio propio: usar onboarding@resend.dev
+// Con dominio verificado: setear RESEND_FROM_EMAIL=noreply@tudominio.com en Vercel
+const FROM = process.env.RESEND_FROM_EMAIL ?? 'onboarding@resend.dev';
 
 // ---- BIENVENIDA AL ADOPTANTE ------------------------------
 

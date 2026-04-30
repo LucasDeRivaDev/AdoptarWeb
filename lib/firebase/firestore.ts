@@ -185,6 +185,16 @@ export async function rejectApplication(applicationId: string): Promise<void> {
 // ADOPCIONES Y TRACKING
 // ============================================================
 
+export async function getAdoptionsByOwner(ownerId: string): Promise<Adoption[]> {
+  const q = query(
+    collection(db, 'adoptions'),
+    where('originalOwnerId', '==', ownerId),
+    orderBy('adoptionDate', 'desc')
+  );
+  const snap = await getDocs(q);
+  return snap.docs.map((d) => ({ id: d.id, ...d.data() } as Adoption));
+}
+
 export async function getAdoptionsByAdopter(adopterId: string): Promise<Adoption[]> {
   const q = query(
     collection(db, 'adoptions'),

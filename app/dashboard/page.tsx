@@ -13,18 +13,20 @@ import {
   getApplicationsByOwner,
   getCatsByOwner,
   getAdoptionsByAdopter,
+  getAdoptionsByOwner,
 } from '@/lib/firebase/firestore';
 import { AdoptionApplication, Cat, Adoption } from '@/types';
 import { Avatar } from '@/components/ui/Avatar';
 import { Badge } from '@/components/ui/Badge';
 import { ApplicationCard } from '@/components/dashboard/ApplicationCard';
 import { AdoptionTrackCard } from '@/components/dashboard/AdoptionTrackCard';
+import { StatsPanel } from '@/components/dashboard/StatsPanel';
 import { CatCard } from '@/components/cats/CatCard';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
-import { Heart, PawPrint, BookOpen, FileText } from 'lucide-react';
+import { Heart, PawPrint, BookOpen, FileText, BarChart2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-type Tab = 'my-applications' | 'received-applications' | 'my-cats' | 'my-adoptions';
+type Tab = 'my-applications' | 'received-applications' | 'my-cats' | 'my-adoptions' | 'stats';
 
 function DashboardContent() {
   const { profile } = useAuth();
@@ -35,25 +37,35 @@ function DashboardContent() {
   const [receivedApplications, setReceivedApplications] = useState<AdoptionApplication[]>([]);
   const [myCats, setMyCats] = useState<Cat[]>([]);
   const [myAdoptions, setMyAdoptions] = useState<Adoption[]>([]);
+  const [myAdoptionsAsOwner, setMyAdoptionsAsOwner] = useState<Adoption[]>([]);
+
+  const isRescuer = profile?.role === 'rescuer' || profile?.role === 'foundation';
 
   useEffect(() => {
     if (!profile) return;
     setLoading(true);
 
-    Promise.all([
+    const queries: Promise<unknown>[] = [
       getApplicationsByApplicant(profile.id),
       getApplicationsByOwner(profile.id),
       getCatsByOwner(profile.id),
       getAdoptionsByAdopter(profile.id),
-    ])
-      .then(([apps, received, cats, adoptions]) => {
-        setMyApplications(apps);
-        setReceivedApplications(received);
-        setMyCats(cats);
-        setMyAdoptions(adoptions);
+    ];
+
+    if (isRescuer) {
+      queries.push(getAdoptionsByOwner(profile.id));
+    }
+
+    Promise.all(queries)
+      .then(([apps, received, cats, adoptions, ownerAdoptions]) => {
+        setMyApplications(apps as AdoptionApplication[]);
+        setReceivedApplications(received as AdoptionApplication[]);
+        setMyCats(cats as Cat[]);
+        setMyAdoptions(adoptions as Adoption[]);
+        if (ownerAdoptions) setMyAdoptionsAsOwner(ownerAdoptions as Adoption[]);
       })
       .finally(() => setLoading(false));
-  }, [profile]);
+  }, [profile, isRescuer]);
 
   if (!profile) return null;
 
@@ -82,6 +94,9 @@ function DashboardContent() {
       icon: Heart,
       count: myAdoptions.length,
     },
+    ...(isRescuer
+      ? [{ id: 'stats' as Tab, label: 'Estadísticas', icon: BarChart2 }]
+      : []),
   ];
 
   return (
@@ -191,6 +206,15 @@ function DashboardContent() {
                 ))
               )}
             </div>
+          )}
+
+          {/* ESTADÍSTICAS — solo rescatistas y fundaciones */}
+          {activeTab === 'stats' && isRescuer && (
+            <StatsPanel
+              myCats={myCats}
+              receivedApplications={receivedApplications}
+              myAdoptionsAsOwner={myAdoptionsAsOwner}
+            />
           )}
         </>
       )}

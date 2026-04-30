@@ -161,6 +161,20 @@ export interface CatFilters {
   maxAgeMonths: number | null;
 }
 
+// ---- MENSAJE DE CHAT ---------------------------------------
+
+export interface Message {
+  id: string;
+  conversationId: string;   // = applicationId — une el chat a la solicitud
+  senderId: string;
+  senderName: string;
+  senderPhoto: string;
+  text: string;
+  participants: string[];   // [applicantId, ownerId] — para las reglas de Firestore
+  createdAt: Timestamp;
+  read: boolean;
+}
+
 // ---- SPONSOR -----------------------------------------------
 
 export type SponsorTier = 'gold' | 'silver' | 'bronze' | 'partner';

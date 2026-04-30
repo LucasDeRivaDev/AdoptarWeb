@@ -17,6 +17,7 @@ import {
   serverTimestamp,
   Timestamp,
   limit,
+  onSnapshot,
 } from 'firebase/firestore';
 import { db } from './config';
 import {
@@ -26,6 +27,7 @@ import {
   TrackingLog,
   UserProfile,
   CatFilters,
+  Message,
 } from '@/types';
 
 // ============================================================
@@ -293,6 +295,32 @@ export async function getPublicStats(): Promise<PublicStats> {
     foundations: users.filter((u) => u.role === 'foundation').length,
     adoptionsByMonth: months,
   };
+}
+
+// ============================================================
+// CHAT — mensajes en tiempo real
+// ============================================================
+
+export async function sendMessage(data: Omit<Message, 'id' | 'createdAt'>): Promise<void> {
+  await addDoc(collection(db, 'messages'), {
+    ...data,
+    createdAt: serverTimestamp(),
+  });
+}
+
+// Retorna la función de cleanup para usar en useEffect
+export function subscribeToMessages(
+  conversationId: string,
+  callback: (messages: Message[]) => void
+): () => void {
+  const q = query(
+    collection(db, 'messages'),
+    where('conversationId', '==', conversationId),
+    orderBy('createdAt', 'asc')
+  );
+  return onSnapshot(q, (snap) => {
+    callback(snap.docs.map((d) => ({ id: d.id, ...d.data() } as Message)));
+  });
 }
 
 // ============================================================

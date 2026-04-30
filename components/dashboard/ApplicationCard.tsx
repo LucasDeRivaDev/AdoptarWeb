@@ -6,7 +6,9 @@ import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { formatRelativeDate, formatHousingType, getApplicationStatusLabel } from '@/lib/utils';
 import { approveApplication, rejectApplication } from '@/lib/firebase/firestore';
+import { ChatModal } from '@/components/dashboard/ChatModal';
 import { useState } from 'react';
+import { MessageCircle } from 'lucide-react';
 
 interface ApplicationCardProps {
   application: AdoptionApplication;
@@ -22,6 +24,7 @@ const statusColors: Record<string, 'coral' | 'sage' | 'amber' | 'gray'> = {
 
 export function ApplicationCard({ application, viewAs, onUpdate }: ApplicationCardProps) {
   const [loading, setLoading] = useState<'approve' | 'reject' | null>(null);
+  const [chatOpen, setChatOpen] = useState(false);
 
   async function handleApprove() {
     setLoading('approve');
@@ -147,6 +150,24 @@ export function ApplicationCard({ application, viewAs, onUpdate }: ApplicationCa
             Rechazar
           </Button>
         </div>
+      )}
+
+      {/* Botón de chat — visible para ambos lados, salvo rechazadas */}
+      {application.status !== 'rejected' && (
+        <div className="pt-1">
+          <button
+            onClick={() => setChatOpen(true)}
+            className="flex items-center gap-2 text-sm text-coral-600 hover:text-coral-700 font-medium transition-colors"
+          >
+            <MessageCircle size={15} />
+            Chatear
+          </button>
+        </div>
+      )}
+
+      {/* Modal del chat */}
+      {chatOpen && (
+        <ChatModal application={application} onClose={() => setChatOpen(false)} />
       )}
     </div>
   );

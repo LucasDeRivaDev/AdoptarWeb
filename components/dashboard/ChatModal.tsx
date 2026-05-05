@@ -10,7 +10,7 @@ import { useState, useEffect, useRef } from 'react';
 import { X, Send } from 'lucide-react';
 import { Timestamp } from 'firebase/firestore';
 import { Message, AdoptionApplication } from '@/types';
-import { sendMessage, subscribeToMessages } from '@/lib/firebase/firestore';
+import { sendMessage, subscribeToMessages, markMessagesAsRead } from '@/lib/firebase/firestore';
 import { useAuth } from '@/context/AuthContext';
 import { Avatar } from '@/components/ui/Avatar';
 import { cn } from '@/lib/utils';
@@ -38,6 +38,12 @@ export function ChatModal({ application, onClose }: ChatModalProps) {
     );
     return unsub; // cleanup al desmontar
   }, [application.id]);
+
+  // Marcar mensajes como leídos al abrir el chat
+  useEffect(() => {
+    if (!profile) return;
+    markMessagesAsRead(application.id, profile.id).catch(console.error);
+  }, [application.id, profile]);
 
   // Auto-scroll al último mensaje
   useEffect(() => {

@@ -18,6 +18,7 @@ import {
   Timestamp,
   limit,
   onSnapshot,
+  writeBatch,
 } from 'firebase/firestore';
 import { db } from './config';
 import {
@@ -329,6 +330,48 @@ export function subscribeToMessages(
       onError?.(err);
     }
   );
+}
+
+// Cuenta mensajes no leídos de la otra persona en una conversación.
+// Usa solo where('conversationId') para no necesitar índice extra.
+export function subscribeToUnreadCount(
+  conversationId: string,
+  currentUserId: string,
+  callback: (count: number) => void
+): () => void {
+  const q = query(
+    collection(db, 'messages'),
+    where('conversationId', '==', conversationId)
+  );
+  return onSnapshot(
+    q,
+    (snap) => {
+      const count = snap.docs.filter(
+        (d) => !d.data().read && d.data().senderId !== currentUserId
+      ).length;
+      callback(count);
+    },
+    (err) => console.error('[chat] unreadCount error:', err)
+  );
+}
+
+// Marca como leídos todos los mensajes de la otra persona en esta conversación
+export async function markMessagesAsRead(
+  conversationId: string,
+  currentUserId: string
+): Promise<void> {
+  const q = query(
+    collection(db, 'messages'),
+    where('conversationId', '==', conversationId)
+  );
+  const snap = await getDocs(q);
+  const unread = snap.docs.filter(
+    (d) => !d.data().read && d.data().senderId !== currentUserId
+  );
+  if (unread.length === 0) return;
+  const batch = writeBatch(db);
+  unread.forEach((d) => batch.update(d.ref, { read: true }));
+  await batch.commit();
 }
 
 // ============================================================

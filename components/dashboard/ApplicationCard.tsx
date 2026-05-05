@@ -5,10 +5,11 @@ import { AdoptionApplication } from '@/types';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { formatRelativeDate, formatHousingType, getApplicationStatusLabel } from '@/lib/utils';
-import { approveApplication, rejectApplication } from '@/lib/firebase/firestore';
+import { approveApplication, rejectApplication, subscribeToUnreadCount } from '@/lib/firebase/firestore';
 import { ChatModal } from '@/components/dashboard/ChatModal';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { MessageCircle } from 'lucide-react';
+import { useAuth } from '@/context/AuthContext';
 
 interface ApplicationCardProps {
   application: AdoptionApplication;
@@ -23,8 +24,16 @@ const statusColors: Record<string, 'coral' | 'sage' | 'amber' | 'gray'> = {
 };
 
 export function ApplicationCard({ application, viewAs, onUpdate }: ApplicationCardProps) {
+  const { profile } = useAuth();
   const [loading, setLoading] = useState<'approve' | 'reject' | null>(null);
   const [chatOpen, setChatOpen] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  // Suscribirse a mensajes no leídos en tiempo real
+  useEffect(() => {
+    if (!profile || application.status === 'rejected') return;
+    return subscribeToUnreadCount(application.id, profile.id, setUnreadCount);
+  }, [application.id, application.status, profile]);
 
   async function handleApprove() {
     setLoading('approve');
@@ -157,10 +166,22 @@ export function ApplicationCard({ application, viewAs, onUpdate }: ApplicationCa
         <div className="pt-1">
           <button
             onClick={() => setChatOpen(true)}
-            className="flex items-center gap-2 text-sm text-coral-600 hover:text-coral-700 font-medium transition-colors"
+            className="relative flex items-center gap-2 text-sm text-coral-600 hover:text-coral-700 font-medium transition-colors"
           >
-            <MessageCircle size={15} />
+            <span className="relative">
+              <MessageCircle size={15} />
+              {unreadCount > 0 && (
+                <span className="absolute -top-2 -right-2 flex items-center justify-center h-4 w-4 rounded-full bg-red-500 text-white text-[9px] font-bold leading-none">
+                  {unreadCount > 9 ? '9+' : unreadCount}
+                </span>
+              )}
+            </span>
             Chatear
+            {unreadCount > 0 && (
+              <span className="text-xs text-red-500 font-semibold">
+                ({unreadCount} nuevo{unreadCount > 1 ? 's' : ''})
+              </span>
+            )}
           </button>
         </div>
       )}

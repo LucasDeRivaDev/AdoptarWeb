@@ -338,8 +338,7 @@ export async function adminSetUserRole(uid: string, role: UserProfile['role'], b
 }
 
 export async function adminGetAllUsers(): Promise<UserProfile[]> {
-  const q = query(collection(db, 'users'), orderBy('createdAt', 'desc'));
-  const snap = await getDocs(q);
+  const snap = await getDocs(collection(db, 'users'));
   return snap.docs.map((d) => ({ id: d.id, ...d.data() } as UserProfile));
 }
 

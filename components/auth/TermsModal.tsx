@@ -10,7 +10,7 @@ import { useState } from 'react';
 import { doc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '@/lib/firebase/config';
 import { Button } from '@/components/ui/Button';
-import { PawPrint, Shield, Eye, Bell } from 'lucide-react';
+import { PawPrint, Shield, Eye, Bell, Heart, Cat } from 'lucide-react';
 
 interface TermsModalProps {
   userId: string;
@@ -21,15 +21,16 @@ interface TermsModalProps {
 export function TermsModal({ userId, userName, onAccepted }: TermsModalProps) {
   const [accepted, setAccepted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [role, setRole] = useState<'adopter' | 'rescuer' | null>(null);
 
   async function handleAccept() {
-    if (!accepted) return;
+    if (!accepted || !role) return;
     setLoading(true);
     try {
-      // Guardar en Firestore que el usuario aceptó los términos
       await updateDoc(doc(db, 'users', userId), {
         acceptedTerms: true,
         acceptedTermsAt: serverTimestamp(),
+        role,
       });
       onAccepted();
     } finally {
@@ -99,8 +100,40 @@ export function TermsModal({ userId, userName, onAccepted }: TermsModalProps) {
           </div>
         </div>
 
-        {/* Footer con checkbox y botón */}
+        {/* Footer con rol, checkbox y botón */}
         <div className="px-6 pb-6 pt-2 space-y-4 border-t border-gray-100">
+
+          {/* Selección de rol */}
+          <div className="space-y-2">
+            <p className="text-sm font-semibold text-gray-700">¿Cómo vas a usar AdopcionWeb?</p>
+            <div className="grid grid-cols-2 gap-3">
+              <button
+                onClick={() => setRole('adopter')}
+                className={`flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all ${
+                  role === 'adopter'
+                    ? 'border-coral-500 bg-coral-50 text-coral-600'
+                    : 'border-gray-200 text-gray-500 hover:border-coral-200'
+                }`}
+              >
+                <Heart size={24} />
+                <span className="text-sm font-medium">Quiero adoptar</span>
+                <span className="text-xs text-center leading-relaxed opacity-70">Busco un gatito para llevar a mi hogar</span>
+              </button>
+              <button
+                onClick={() => setRole('rescuer')}
+                className={`flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all ${
+                  role === 'rescuer'
+                    ? 'border-sage-500 bg-sage-50 text-sage-600'
+                    : 'border-gray-200 text-gray-500 hover:border-sage-200'
+                }`}
+              >
+                <Cat size={24} />
+                <span className="text-sm font-medium">Doy en adopción</span>
+                <span className="text-xs text-center leading-relaxed opacity-70">Rescato gatos y busco familias</span>
+              </button>
+            </div>
+          </div>
+
           <label className="flex items-start gap-3 cursor-pointer group">
             <input
               type="checkbox"
@@ -116,7 +149,7 @@ export function TermsModal({ userId, userName, onAccepted }: TermsModalProps) {
           <Button
             onClick={handleAccept}
             loading={loading}
-            disabled={!accepted}
+            disabled={!accepted || !role}
             className="w-full"
             size="lg"
           >

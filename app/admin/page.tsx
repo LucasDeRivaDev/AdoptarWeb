@@ -128,6 +128,16 @@ function UsersTab({ users: initialUsers }: { users: UserProfile[] }) {
   const [loadingId, setLoadingId] = useState<string | null>(null);
   const [banTarget, setBanTarget] = useState<UserProfile | null>(null);
 
+  async function handleRoleChange(u: UserProfile, newRole: 'adopter' | 'rescuer' | 'foundation') {
+    setLoadingId(u.id);
+    try {
+      await adminSetUserRole(u.id, newRole);
+      setUsers((prev) => prev.map((x) => x.id === u.id ? { ...x, role: newRole } : x));
+    } finally {
+      setLoadingId(null);
+    }
+  }
+
   const filtered = useMemo(() => {
     const q = search.toLowerCase();
     return users.filter((u) =>
@@ -195,19 +205,32 @@ function UsersTab({ users: initialUsers }: { users: UserProfile[] }) {
               )}
             </div>
             {u.role !== 'admin' && (
-              <button
-                onClick={() => u.role === 'banned' ? handleUnban(u) : setBanTarget(u)}
-                disabled={loadingId === u.id}
-                title={u.role === 'banned' ? 'Desbanear usuario' : 'Banear usuario'}
-                className={cn(
-                  'flex-shrink-0 p-2 rounded-xl transition-colors disabled:opacity-50',
-                  u.role === 'banned'
-                    ? 'text-sage-600 hover:bg-sage-50'
-                    : 'text-red-400 hover:bg-red-50'
-                )}
-              >
-                {u.role === 'banned' ? <CheckCircle size={18} /> : <Ban size={18} />}
-              </button>
+              <div className="flex items-center gap-2 flex-shrink-0">
+                <select
+                  value={u.role === 'banned' ? 'banned' : u.role}
+                  disabled={loadingId === u.id || u.role === 'banned'}
+                  onChange={(e) => handleRoleChange(u, e.target.value as 'adopter' | 'rescuer' | 'foundation')}
+                  className="text-xs border border-gray-200 rounded-lg px-2 py-1.5 bg-white text-gray-600 focus:outline-none focus:ring-2 focus:ring-coral-300 disabled:opacity-50"
+                >
+                  <option value="adopter">Adoptante</option>
+                  <option value="rescuer">Rescatista</option>
+                  <option value="foundation">Fundación</option>
+                  {u.role === 'banned' && <option value="banned">Baneado</option>}
+                </select>
+                <button
+                  onClick={() => u.role === 'banned' ? handleUnban(u) : setBanTarget(u)}
+                  disabled={loadingId === u.id}
+                  title={u.role === 'banned' ? 'Desbanear usuario' : 'Banear usuario'}
+                  className={cn(
+                    'p-2 rounded-xl transition-colors disabled:opacity-50',
+                    u.role === 'banned'
+                      ? 'text-sage-600 hover:bg-sage-50'
+                      : 'text-red-400 hover:bg-red-50'
+                  )}
+                >
+                  {u.role === 'banned' ? <CheckCircle size={18} /> : <Ban size={18} />}
+                </button>
+              </div>
             )}
           </div>
         ))}
@@ -392,6 +415,8 @@ function AdminContent() {
       setCats(c);
       setApplications(a);
       setAdoptions(ad);
+    }).catch((err) => {
+      console.error('[admin] Error cargando datos:', err);
     }).finally(() => setLoading(false));
   }, []);
 

@@ -1,28 +1,46 @@
 // ============================================================
-// UPLOAD DE ARCHIVOS A FIREBASE STORAGE
-// Maneja fotos de gatos y documentos de seguimiento.
+// UPLOAD DE ARCHIVOS VÍA CLOUDINARY
+// Firebase Storage requiere plan Blaze (pago), así que
+// usamos Cloudinary (plan gratuito) a través de /api/upload.
 // ============================================================
 
-import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
-import { storage } from './config';
+async function uploadToCloudinary(file: File, folder: string): Promise<string> {
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('folder', folder);
+
+  const res = await fetch('/api/upload', {
+    method: 'POST',
+    body: formData,
+  });
+
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.error ?? 'Error al subir la imagen');
+  }
+
+  const { url } = await res.json();
+  return url as string;
+}
 
 // Sube una foto de gato y devuelve la URL pública
 export async function uploadCatPhoto(
   file: File,
   catId: string,
-  index: number
+  _index: number
 ): Promise<string> {
-  const ext = file.name.split('.').pop();
-  const path = `cats/${catId}/photo_${index}.${ext}`;
-  const storageRef = ref(storage, path);
-  await uploadBytes(storageRef, file);
-  return getDownloadURL(storageRef);
+  return uploadToCloudinary(file, `adopcionweb/cats/${catId}`);
 }
 
 // Sube múltiples fotos y devuelve array de URLs
 export async function uploadCatPhotos(files: File[], catId: string): Promise<string[]> {
-  const uploads = files.map((file, i) => uploadCatPhoto(file, catId, i));
-  return Promise.all(uploads);
+  // Subir de a una para no saturar la API route en prod
+  const urls: string[] = [];
+  for (let i = 0; i < files.length; i++) {
+    const url = await uploadCatPhoto(files[i], catId, i);
+    urls.push(url);
+  }
+  return urls;
 }
 
 // Sube un documento de seguimiento (vacuna, turno médico, etc.)
@@ -31,15 +49,12 @@ export async function uploadTrackingDocument(
   adoptionId: string,
   logId: string
 ): Promise<string> {
-  const ext = file.name.split('.').pop();
-  const path = `tracking/${adoptionId}/${logId}.${ext}`;
-  const storageRef = ref(storage, path);
-  await uploadBytes(storageRef, file);
-  return getDownloadURL(storageRef);
+  return uploadToCloudinary(file, `adopcionweb/tracking/${adoptionId}/${logId}`);
 }
 
-// Elimina un archivo (para cuando se borra un log)
-export async function deleteFile(url: string): Promise<void> {
-  const fileRef = ref(storage, url);
-  await deleteObject(fileRef);
+// Eliminar en Cloudinary requiere el public_id (no la URL).
+// Por ahora dejamos la función vacía para no romper los tipos.
+export async function deleteFile(_url: string): Promise<void> {
+  // TODO: si se necesita borrar imágenes, extraer el public_id de la URL
+  // y llamar a cloudinary.uploader.destroy() desde una API route.
 }

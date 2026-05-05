@@ -47,6 +47,14 @@
         { "fieldPath": "originalOwnerId", "order": "ASCENDING" },
         { "fieldPath": "adoptionDate", "order": "DESCENDING" }
       ]
+    },
+    {
+      "collectionGroup": "messages",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "conversationId", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "ASCENDING" }
+      ]
     }
   ],
   "fieldOverrides": []

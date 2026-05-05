@@ -45,24 +45,30 @@ function DashboardContent() {
     if (!profile) return;
     setLoading(true);
 
-    const queries: Promise<unknown>[] = [
+    const queries = [
       getApplicationsByApplicant(profile.id),
       getApplicationsByOwner(profile.id),
       getCatsByOwner(profile.id),
       getAdoptionsByAdopter(profile.id),
+      isRescuer ? getAdoptionsByOwner(profile.id) : Promise.resolve([]),
     ];
 
-    if (isRescuer) {
-      queries.push(getAdoptionsByOwner(profile.id));
-    }
-
-    Promise.all(queries)
+    Promise.allSettled(queries)
       .then(([apps, received, cats, adoptions, ownerAdoptions]) => {
-        setMyApplications(apps as AdoptionApplication[]);
-        setReceivedApplications(received as AdoptionApplication[]);
-        setMyCats(cats as Cat[]);
-        setMyAdoptions(adoptions as Adoption[]);
-        if (ownerAdoptions) setMyAdoptionsAsOwner(ownerAdoptions as Adoption[]);
+        if (apps.status === 'fulfilled') setMyApplications(apps.value as AdoptionApplication[]);
+        else console.error('[dashboard] mis solicitudes:', apps.reason);
+
+        if (received.status === 'fulfilled') setReceivedApplications(received.value as AdoptionApplication[]);
+        else console.error('[dashboard] solicitudes recibidas:', received.reason);
+
+        if (cats.status === 'fulfilled') setMyCats(cats.value as Cat[]);
+        else console.error('[dashboard] mis gatos:', cats.reason);
+
+        if (adoptions.status === 'fulfilled') setMyAdoptions(adoptions.value as Adoption[]);
+        else console.error('[dashboard] mis adopciones:', adoptions.reason);
+
+        if (ownerAdoptions.status === 'fulfilled') setMyAdoptionsAsOwner(ownerAdoptions.value as Adoption[]);
+        else console.error('[dashboard] adopciones como dueño:', ownerAdoptions.reason);
       })
       .finally(() => setLoading(false));
   }, [profile, isRescuer]);

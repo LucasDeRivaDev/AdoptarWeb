@@ -25,12 +25,17 @@ export function ChatModal({ application, onClose }: ChatModalProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [text, setText] = useState('');
   const [sending, setSending] = useState(false);
+  const [chatError, setChatError] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   // Suscripción en tiempo real a los mensajes de esta conversación
   useEffect(() => {
-    const unsub = subscribeToMessages(application.id, setMessages);
+    const unsub = subscribeToMessages(
+      application.id,
+      (msgs) => { setMessages(msgs); setChatError(''); },
+      () => setChatError('El chat no está disponible aún. Esperá unos segundos y volvé a intentarlo.')
+    );
     return unsub; // cleanup al desmontar
   }, [application.id]);
 
@@ -72,6 +77,10 @@ export function ChatModal({ application, onClose }: ChatModalProps) {
         participants: [application.applicantId, application.ownerId],
         read: false,
       });
+    } catch (err) {
+      console.error('[chat] sendMessage error:', err);
+      setText(trimmed); // devuelvo el texto para que no lo pierda
+      setChatError('No se pudo enviar el mensaje. Intentá de nuevo.');
     } finally {
       setSending(false);
     }
@@ -122,6 +131,13 @@ export function ChatModal({ application, onClose }: ChatModalProps) {
             <X size={18} />
           </button>
         </div>
+
+        {/* Error */}
+        {chatError && (
+          <div className="mx-4 mt-3 px-4 py-2.5 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-700">
+            {chatError}
+          </div>
+        )}
 
         {/* Mensajes */}
         <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3">

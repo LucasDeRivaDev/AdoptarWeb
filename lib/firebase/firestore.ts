@@ -311,16 +311,24 @@ export async function sendMessage(data: Omit<Message, 'id' | 'createdAt'>): Prom
 // Retorna la función de cleanup para usar en useEffect
 export function subscribeToMessages(
   conversationId: string,
-  callback: (messages: Message[]) => void
+  callback: (messages: Message[]) => void,
+  onError?: (err: Error) => void
 ): () => void {
   const q = query(
     collection(db, 'messages'),
     where('conversationId', '==', conversationId),
     orderBy('createdAt', 'asc')
   );
-  return onSnapshot(q, (snap) => {
-    callback(snap.docs.map((d) => ({ id: d.id, ...d.data() } as Message)));
-  });
+  return onSnapshot(
+    q,
+    (snap) => {
+      callback(snap.docs.map((d) => ({ id: d.id, ...d.data() } as Message)));
+    },
+    (err) => {
+      console.error('[chat] subscribeToMessages error:', err);
+      onError?.(err);
+    }
+  );
 }
 
 // ============================================================

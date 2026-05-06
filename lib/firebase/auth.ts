@@ -16,6 +16,7 @@ import { auth, db } from './config';
 import { UserProfile } from '@/types';
 
 const googleProvider = new GoogleAuthProvider();
+googleProvider.setCustomParameters({ prompt: 'select_account' });
 
 // ---- LOGIN CON GOOGLE ---------------------------------------
 

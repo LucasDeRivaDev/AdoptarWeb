@@ -87,6 +87,7 @@ export interface AdoptionApplication {
   safetyMeasures: string;
   motivation: string;
   createdAt: Timestamp;
+  adoptionId?: string;  // se guarda cuando el rescatista aprueba
 }
 
 // ---- ADOPCIÓN (registro cuando se aprueba) -----------------
@@ -105,6 +106,7 @@ export interface Adoption {
   nextVaccineReminder: Timestamp;    // adopción + 3 meses
   nextCheckupReminder: Timestamp;    // adopción + 6 meses
   createdAt: Timestamp;
+  adopterDNI?: string;               // DNI del adoptante — se completa en el contrato
 }
 
 // ---- LOG DE SEGUIMIENTO ------------------------------------

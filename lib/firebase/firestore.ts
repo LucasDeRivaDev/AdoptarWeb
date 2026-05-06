@@ -161,7 +161,7 @@ export async function approveApplication(application: AdoptionApplication): Prom
     }
   }
 
-  // 4. Crear el registro de adopción
+  // 4. Crear el registro de adopción y guardar el adoptionId en la solicitud
   const adoptionData: Omit<Adoption, 'id'> = {
     catId: application.catId,
     catName: application.catName,
@@ -177,6 +177,8 @@ export async function approveApplication(application: AdoptionApplication): Prom
     createdAt: now,
   };
   const ref = await addDoc(collection(db, 'adoptions'), adoptionData);
+  // Guardar el adoptionId en la solicitud para poder linkear el contrato desde el dashboard
+  await updateDoc(doc(db, 'applications', application.id), { adoptionId: ref.id });
   return ref.id;
 }
 
@@ -212,6 +214,16 @@ export async function getAdoptionById(adoptionId: string): Promise<Adoption | nu
   const snap = await getDoc(doc(db, 'adoptions', adoptionId));
   if (!snap.exists()) return null;
   return { id: snap.id, ...snap.data() } as Adoption;
+}
+
+export async function getApplicationById(applicationId: string): Promise<AdoptionApplication | null> {
+  const snap = await getDoc(doc(db, 'applications', applicationId));
+  if (!snap.exists()) return null;
+  return { id: snap.id, ...snap.data() } as AdoptionApplication;
+}
+
+export async function updateAdoptionDNI(adoptionId: string, dni: string): Promise<void> {
+  await updateDoc(doc(db, 'adoptions', adoptionId), { adopterDNI: dni });
 }
 
 export async function addTrackingLog(

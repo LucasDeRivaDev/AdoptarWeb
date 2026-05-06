@@ -8,8 +8,9 @@ import { formatRelativeDate, formatHousingType, getApplicationStatusLabel } from
 import { approveApplication, rejectApplication, subscribeToUnreadCount } from '@/lib/firebase/firestore';
 import { ChatModal } from '@/components/dashboard/ChatModal';
 import { useState, useEffect } from 'react';
-import { MessageCircle } from 'lucide-react';
+import { MessageCircle, FileText, ClipboardList } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
+import Link from 'next/link';
 
 interface ApplicationCardProps {
   application: AdoptionApplication;
@@ -158,6 +159,22 @@ export function ApplicationCard({ application, viewAs, onUpdate }: ApplicationCa
           >
             Rechazar
           </Button>
+        </div>
+      )}
+
+      {/* Botones post-aprobación */}
+      {application.status === 'approved' && application.adoptionId && (
+        <div className="flex gap-2 pt-1 flex-wrap">
+          <Link href={`/contrato/${application.adoptionId}`}>
+            <button className="flex items-center gap-1.5 text-sm text-sage-600 hover:text-sage-700 font-medium transition-colors bg-sage-50 px-3 py-1.5 rounded-xl">
+              <FileText size={14} /> Ver contrato
+            </button>
+          </Link>
+          <Link href={`/track/${application.adoptionId}`}>
+            <button className="flex items-center gap-1.5 text-sm text-coral-600 hover:text-coral-700 font-medium transition-colors bg-coral-50 px-3 py-1.5 rounded-xl">
+              <ClipboardList size={14} /> Seguimiento
+            </button>
+          </Link>
         </div>
       )}
 

@@ -53,6 +53,10 @@ service cloud.firestore {
         request.auth.uid == resource.data.originalOwnerId
       ));
       allow create: if request.auth != null;
+      // El adoptante puede guardar su DNI (solo ese campo)
+      allow update: if request.auth != null &&
+        request.auth.uid == resource.data.adopterId &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['adopterDNI']);
     }
 
     // ---- TRACKING LOGS -----------------------------------

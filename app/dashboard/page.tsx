@@ -203,13 +203,31 @@ function DashboardContent() {
 
           {/* MIS ADOPCIONES */}
           {activeTab === 'my-adoptions' && (
-            <div className="space-y-4">
-              {myAdoptions.length === 0 ? (
-                <EmptyState icon="🏠" message="Todavía no tenés adopciones registradas" sub="Cuando adoptes un gatito, podrás seguir su historia acá" />
-              ) : (
-                myAdoptions.map((adoption) => (
-                  <AdoptionTrackCard key={adoption.id} adoption={adoption} />
-                ))
+            <div className="space-y-6">
+              {/* Como adoptante */}
+              {myAdoptions.length > 0 && (
+                <div>
+                  <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">Animales que adoptaste</h3>
+                  <div className="space-y-4">
+                    {myAdoptions.map((adoption) => (
+                      <AdoptionTrackCard key={adoption.id} adoption={adoption} />
+                    ))}
+                  </div>
+                </div>
+              )}
+              {/* Como rescatista — animales que dio en adopción */}
+              {isRescuer && myAdoptionsAsOwner.length > 0 && (
+                <div>
+                  <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">Animales que diste en adopción</h3>
+                  <div className="space-y-4">
+                    {myAdoptionsAsOwner.map((adoption) => (
+                      <AdoptionTrackCard key={adoption.id} adoption={adoption} />
+                    ))}
+                  </div>
+                </div>
+              )}
+              {myAdoptions.length === 0 && (!isRescuer || myAdoptionsAsOwner.length === 0) && (
+                <EmptyState icon="🏠" message="Todavía no tenés adopciones registradas" sub="Cuando se concrete una adopción, podrás seguir su historia acá" />
               )}
             </div>
           )}

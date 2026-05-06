@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { Adoption } from '@/types';
 import { Button } from '@/components/ui/Button';
 import { formatDate } from '@/lib/utils';
-import { Calendar, ArrowRight } from 'lucide-react';
+import { Calendar, ArrowRight, FileText } from 'lucide-react';
 
 interface AdoptionTrackCardProps {
   adoption: Adoption;
@@ -38,11 +38,18 @@ export function AdoptionTrackCard({ adoption }: AdoptionTrackCardProps) {
             <span>Próximo: {nextReminder.label} — {formatDate(nextReminder.date)}</span>
           </div>
 
-          <Link href={`/track/${adoption.id}`}>
-            <Button variant="outline" size="sm" className="gap-1 mt-1">
-              Ver seguimiento <ArrowRight size={14} />
-            </Button>
-          </Link>
+          <div className="flex gap-2 mt-1">
+            <Link href={`/track/${adoption.id}`}>
+              <Button variant="outline" size="sm" className="gap-1">
+                Seguimiento <ArrowRight size={14} />
+              </Button>
+            </Link>
+            <Link href={`/contrato/${adoption.id}`}>
+              <Button variant="ghost" size="sm" className="gap-1 text-sage-600 hover:text-sage-700">
+                <FileText size={13} /> Contrato
+              </Button>
+            </Link>
+          </div>
         </div>
       </div>
     </div>

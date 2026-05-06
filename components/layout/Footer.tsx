@@ -1,5 +1,6 @@
 import Link from 'next/link';
-import { PawPrint, Heart, Instagram, Github } from 'lucide-react';
+import { Heart, Instagram, Github } from 'lucide-react';
+import { Logo } from '@/components/ui/Logo';
 
 export function Footer() {
   return (
@@ -8,9 +9,8 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand */}
           <div className="md:col-span-2">
-            <Link href="/" className="flex items-center gap-2 font-bold text-coral-500 text-xl mb-3">
-              <PawPrint size={22} className="fill-coral-500" />
-              AdopcionWeb
+            <Link href="/" className="inline-flex mb-3">
+              <Logo size={28} textClassName="text-lg" />
             </Link>
             <p className="text-sm text-gray-500 leading-relaxed max-w-xs">
               Una plataforma que conecta gatitos que buscan hogar con familias llenas de amor.

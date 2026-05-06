@@ -13,7 +13,8 @@ import { Cat } from '@/types';
 import { CatCard } from '@/components/cats/CatCard';
 import { Button } from '@/components/ui/Button';
 import { StatsSection } from '@/components/home/StatsSection';
-import { Heart, PawPrint, Shield, Bell } from 'lucide-react';
+import { Logo } from '@/components/ui/Logo';
+import { Heart, Shield, Bell } from 'lucide-react';
 
 export default async function HomePage() {
   // Cargar gatos destacados desde Firestore (server-side)
@@ -34,49 +35,60 @@ export default async function HomePage() {
       {/* ---- HERO ----------------------------------------- */}
       <section className="hero-gradient">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-20 lg:py-28">
-          <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 bg-coral-100 text-coral-600 text-sm font-medium px-4 py-1.5 rounded-full mb-6">
-              <PawPrint size={14} className="fill-coral-500" />
-              Adopción responsable
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            {/* Texto */}
+            <div>
+              <div className="inline-flex items-center gap-2 bg-coral-100 text-coral-600 text-sm font-medium px-4 py-1.5 rounded-full mb-6">
+                <Logo size={16} showText={false} />
+                Adopción responsable
+              </div>
+
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-800 leading-tight mb-6">
+                Cada gatito merece
+                <span className="text-coral-500"> un hogar</span>
+                <span className="text-gray-400"> para siempre</span>
+              </h1>
+
+              <p className="text-lg text-gray-600 mb-8 leading-relaxed">
+                Conectamos gatitos que buscan familia con personas llenas de amor.
+                Adoptá con responsabilidad, seguí el crecimiento de tu compañero
+                y apoyá a los rescatistas que hacen esto posible.
+              </p>
+
+              <div className="flex flex-wrap gap-3">
+                <Link href="/cats">
+                  <Button size="lg">
+                    <Heart size={18} /> Ver gatitos disponibles
+                  </Button>
+                </Link>
+                <Link href="/cats/publish">
+                  <Button variant="outline" size="lg">
+                    Publicar un gatito
+                  </Button>
+                </Link>
+              </div>
+
+              {/* Stats */}
+              <div className="flex gap-8 mt-12 pt-8 border-t border-coral-100">
+                {[
+                  { number: '200+', label: 'Adopciones exitosas' },
+                  { number: '50+', label: 'Rescatistas activos' },
+                  { number: '15', label: 'Ciudades' },
+                ].map((stat) => (
+                  <div key={stat.label}>
+                    <p className="text-2xl font-bold text-coral-500">{stat.number}</p>
+                    <p className="text-sm text-gray-500">{stat.label}</p>
+                  </div>
+                ))}
+              </div>
             </div>
 
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-800 leading-tight mb-6">
-              Cada gatito merece
-              <span className="text-coral-500"> un hogar</span>
-              <span className="text-gray-400"> para siempre</span>
-            </h1>
-
-            <p className="text-lg text-gray-600 mb-8 leading-relaxed">
-              Conectamos gatitos que buscan familia con personas llenas de amor.
-              Adoptá con responsabilidad, seguí el crecimiento de tu compañero
-              y apoyá a los rescatistas que hacen esto posible.
-            </p>
-
-            <div className="flex flex-wrap gap-3">
-              <Link href="/cats">
-                <Button size="lg">
-                  <Heart size={18} /> Ver gatitos disponibles
-                </Button>
-              </Link>
-              <Link href="/cats/publish">
-                <Button variant="outline" size="lg">
-                  Publicar un gatito
-                </Button>
-              </Link>
-            </div>
-
-            {/* Stats */}
-            <div className="flex gap-8 mt-12 pt-8 border-t border-coral-100">
-              {[
-                { number: '200+', label: 'Adopciones exitosas' },
-                { number: '50+', label: 'Rescatistas activos' },
-                { number: '15', label: 'Ciudades' },
-              ].map((stat) => (
-                <div key={stat.label}>
-                  <p className="text-2xl font-bold text-coral-500">{stat.number}</p>
-                  <p className="text-sm text-gray-500">{stat.label}</p>
-                </div>
-              ))}
+            {/* Logo decorativo — solo desktop */}
+            <div className="hidden lg:flex justify-center items-center">
+              <div className="relative">
+                <div className="absolute inset-0 bg-coral-200 rounded-full blur-3xl opacity-20 scale-110" />
+                <Logo size={220} showText={false} className="relative drop-shadow-xl" />
+              </div>
             </div>
           </div>
         </div>

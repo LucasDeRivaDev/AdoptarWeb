@@ -3,11 +3,13 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Menu, X, Heart, PawPrint } from 'lucide-react';
+import { Menu, X, Heart, Sun, Moon } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
+import { useTheme } from '@/context/ThemeContext';
 import { logout } from '@/lib/firebase/auth';
 import { Avatar } from '@/components/ui/Avatar';
 import { Button } from '@/components/ui/Button';
+import { Logo } from '@/components/ui/Logo';
 import { cn } from '@/lib/utils';
 
 const NAV_LINKS = [
@@ -19,6 +21,7 @@ const NAV_LINKS = [
 
 export function Header() {
   const { user, profile, loading } = useAuth();
+  const { theme, toggle: toggleTheme } = useTheme();
   const pathname = usePathname();
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -35,9 +38,8 @@ export function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 font-bold text-coral-500 text-xl">
-            <PawPrint size={24} className="fill-coral-500" />
-            <span>AdopcionWeb</span>
+          <Link href="/">
+            <Logo size={32} />
           </Link>
 
           {/* Desktop Nav */}
@@ -60,6 +62,14 @@ export function Header() {
 
           {/* Auth Area */}
           <div className="hidden md:flex items-center gap-3">
+            {/* Toggle dark mode */}
+            <button
+              onClick={toggleTheme}
+              aria-label="Cambiar tema"
+              className="p-2 rounded-xl text-gray-500 hover:bg-gray-100 hover:text-gray-700 transition-colors"
+            >
+              {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+            </button>
             {loading ? (
               <div className="h-9 w-24 bg-gray-100 rounded-xl animate-pulse" />
             ) : user && profile ? (
@@ -98,13 +108,22 @@ export function Header() {
             )}
           </div>
 
-          {/* Mobile menu toggle */}
-          <button
-            className="md:hidden p-2 rounded-xl text-gray-600 hover:bg-gray-100"
-            onClick={() => setMenuOpen(!menuOpen)}
-          >
-            {menuOpen ? <X size={22} /> : <Menu size={22} />}
-          </button>
+          {/* Mobile: dark toggle + menu */}
+          <div className="md:hidden flex items-center gap-1">
+            <button
+              onClick={toggleTheme}
+              aria-label="Cambiar tema"
+              className="p-2 rounded-xl text-gray-500 hover:bg-gray-100 transition-colors"
+            >
+              {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+            </button>
+            <button
+              className="p-2 rounded-xl text-gray-600 hover:bg-gray-100"
+              onClick={() => setMenuOpen(!menuOpen)}
+            >
+              {menuOpen ? <X size={22} /> : <Menu size={22} />}
+            </button>
+          </div>
         </div>
       </div>
 

@@ -53,3 +53,92 @@
     background: linear-gradient(135deg, #FFF8F0 0%, #FFE8DC 50%, #FFF1E8 100%);
   }
 }
+
+/* ─────────────────────────────────────────
+   DARK MODE — activa con clase .dark en <html>
+   ───────────────────────────────────────── */
+
+/* Base */
+.dark body {
+  background-color: #0f172a;
+  color: #f1f5f9;
+}
+
+/* Scrollbar */
+.dark ::-webkit-scrollbar-thumb {
+  background-color: #334155 !important;
+}
+
+/* Hero gradient */
+.dark .hero-gradient {
+  background: linear-gradient(135deg, #0f172a 0%, #1a1f3b 50%, #0f172a 100%) !important;
+}
+
+/* Superficies blancas */
+.dark .bg-white { background-color: #1e293b !important; }
+
+/* Superficies cream */
+.dark .bg-cream,
+.dark .bg-cream-50,
+.dark .bg-cream-100,
+.dark .bg-cream-200 { background-color: #1a2744 !important; }
+
+/* Textos */
+.dark .text-gray-800 { color: #f1f5f9 !important; }
+.dark .text-gray-700 { color: #e2e8f0 !important; }
+.dark .text-gray-600 { color: #cbd5e1 !important; }
+.dark .text-gray-500 { color: #94a3b8 !important; }
+.dark .text-gray-400 { color: #64748b !important; }
+
+/* Bordes */
+.dark .border-gray-100,
+.dark .border-gray-200,
+.dark .border-cream-200 { border-color: #334155 !important; }
+
+/* Header sticky */
+.dark header {
+  background-color: rgba(15, 23, 42, 0.92) !important;
+  border-color: #334155 !important;
+}
+
+/* Footer */
+.dark footer {
+  background-color: #1e293b !important;
+  border-color: #334155 !important;
+}
+
+/* Cards */
+.dark .shadow-card { box-shadow: 0 2px 20px rgba(0, 0, 0, 0.35) !important; }
+
+/* Hover states */
+.dark .hover\:bg-cream-100:hover,
+.dark .hover\:bg-cream-200:hover { background-color: #263350 !important; }
+.dark .hover\:bg-gray-50:hover   { background-color: #1e2d40 !important; }
+.dark .hover\:bg-gray-100:hover  { background-color: #334155 !important; }
+.dark .hover\:bg-red-50:hover    { background-color: #3b1818 !important; }
+
+/* Coral tints en dark */
+.dark .bg-coral-50  { background-color: #2d1810 !important; }
+.dark .bg-coral-100 { background-color: #3d2015 !important; }
+
+/* Sage tints en dark */
+.dark .bg-sage-50  { background-color: #0f231e !important; }
+.dark .bg-sage-100 { background-color: #1a3529 !important; }
+
+/* Amber tints en dark */
+.dark .bg-amber-100 { background-color: #2d2010 !important; }
+
+/* Dropdown / popover */
+.dark .bg-white.rounded-2xl,
+.dark .bg-white.rounded-xl { background-color: #1e293b !important; }
+
+/* Inputs y selects */
+.dark input,
+.dark textarea,
+.dark select {
+  background-color: #1e293b !important;
+  border-color: #334155 !important;
+  color: #f1f5f9 !important;
+}
+.dark input::placeholder,
+.dark textarea::placeholder { color: #64748b !important; }

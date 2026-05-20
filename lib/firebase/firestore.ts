@@ -43,7 +43,9 @@ export async function getCats(filters?: Partial<CatFilters>): Promise<Cat[]> {
   );
 
   // Los filtros compuestos en Firestore requieren índices.
-  // Filtramos por género si está especificado.
+  if (filters?.animalType) {
+    q = query(q, where('animalType', '==', filters.animalType));
+  }
   if (filters?.gender) {
     q = query(q, where('gender', '==', filters.gender));
   }

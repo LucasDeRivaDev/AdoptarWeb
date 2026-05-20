@@ -14,7 +14,7 @@ import { cn } from '@/lib/utils';
 
 const NAV_LINKS = [
   { href: '/cats', label: 'Adoptar' },
-  { href: '/cats/publish', label: 'Publicar gatito' },
+  { href: '/cats/publish', label: 'Publicar mascota' },
   { href: '/donate', label: 'Donar' },
   { href: '/sponsors', label: 'Sponsors' },
 ];

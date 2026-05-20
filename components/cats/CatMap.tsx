@@ -20,8 +20,9 @@ interface CatMapProps {
 }
 
 // Ícono personalizado con la paleta del proyecto
-function createCatIcon(isSpecialNeeds: boolean) {
-  const bg = isSpecialNeeds ? '#f97316' : '#f87171'; // naranja si necesidades especiales, coral si no
+function createAnimalIcon(animalType: string, isSpecialNeeds: boolean) {
+  const bg = isSpecialNeeds ? '#f97316' : '#f87171';
+  const emoji = animalType === 'dog' ? '🐶' : '🐱';
   return divIcon({
     html: `
       <div style="
@@ -35,7 +36,7 @@ function createCatIcon(isSpecialNeeds: boolean) {
         align-items: center;
         justify-content: center;
         font-size: 18px;
-      ">🐱</div>
+      ">${emoji}</div>
     `,
     className: '',
     iconSize: [36, 36],
@@ -51,7 +52,7 @@ function ageLabel(months: number): string {
 }
 
 export function CatMap({ cats }: CatMapProps) {
-  // Filtrar solo los gatos que tienen coordenadas
+  // Filtrar solo las mascotas que tienen coordenadas
   const mappableCats = cats.filter((c) => c.coordinates);
 
   return (
@@ -59,7 +60,7 @@ export function CatMap({ cats }: CatMapProps) {
       {mappableCats.length === 0 ? (
         <div className="h-full flex flex-col items-center justify-center bg-cream-50 text-gray-400 gap-3">
           <span className="text-5xl">🗺️</span>
-          <p className="text-sm">Ningún gatito tiene ubicación en el mapa todavía.</p>
+          <p className="text-sm">Ninguna mascota tiene ubicación en el mapa todavía.</p>
         </div>
       ) : (
         <MapContainer
@@ -78,7 +79,7 @@ export function CatMap({ cats }: CatMapProps) {
             <Marker
               key={cat.id}
               position={[cat.coordinates!.lat, cat.coordinates!.lng]}
-              icon={createCatIcon(cat.health.specialNeeds)}
+              icon={createAnimalIcon(cat.animalType, cat.health.specialNeeds)}
             >
               <Popup className="cat-popup">
                 <div className="flex flex-col gap-2 min-w-[180px]">

@@ -157,7 +157,7 @@ function DashboardContent() {
           {activeTab === 'my-applications' && (
             <div className="space-y-4">
               {myApplications.length === 0 ? (
-                <EmptyState icon="📝" message="Todavía no enviaste ninguna solicitud" sub="Explorá los gatitos disponibles y aplicá para adoptar" />
+                <EmptyState icon="📝" message="Todavía no enviaste ninguna solicitud" sub="Explorá las mascotas disponibles y aplicá para adoptar" />
               ) : (
                 myApplications.map((app) => (
                   <ApplicationCard key={app.id} application={app} viewAs="applicant" />
@@ -170,7 +170,7 @@ function DashboardContent() {
           {activeTab === 'received-applications' && (
             <div className="space-y-4">
               {receivedApplications.length === 0 ? (
-                <EmptyState icon="📬" message="No recibiste solicitudes aún" sub="Cuando alguien quiera adoptar tus gatitos, aparecerán acá" />
+                <EmptyState icon="📬" message="No recibiste solicitudes aún" sub="Cuando alguien quiera adoptar tus mascotas, aparecerán acá" />
               ) : (
                 receivedApplications.map((app) => (
                   <ApplicationCard
@@ -190,7 +190,7 @@ function DashboardContent() {
           {activeTab === 'my-cats' && (
             <div>
               {myCats.length === 0 ? (
-                <EmptyState icon="🐱" message="No publicaste ningún gatito todavía" sub="Ayudá a un gatito a encontrar hogar publicando su perfil" />
+                <EmptyState icon="🐾" message="No publicaste ninguna mascota todavía" sub="Ayudá a una mascota a encontrar hogar publicando su perfil" />
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
                   {myCats.map((cat) => (

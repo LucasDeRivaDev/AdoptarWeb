@@ -13,6 +13,7 @@ interface CatFiltersProps {
 
 const DEFAULT_FILTERS: Filters = {
   location: '',
+  animalType: '',
   gender: '',
   vaccinated: null,
   sterilized: null,
@@ -34,7 +35,7 @@ export function CatFiltersPanel({ filters, onChange }: CatFiltersProps) {
 
   return (
     <div className="bg-white rounded-2xl shadow-soft border border-gray-100 p-4">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3 items-end">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 lg:grid-cols-6 gap-3 items-end">
         {/* Búsqueda por ubicación */}
         <div className="relative sm:col-span-2 md:col-span-1">
           <Input
@@ -45,6 +46,18 @@ export function CatFiltersPanel({ filters, onChange }: CatFiltersProps) {
           />
           <Search size={14} className="absolute right-3 top-9 text-gray-400" />
         </div>
+
+        {/* Especie */}
+        <Select
+          label="Especie"
+          value={filters.animalType}
+          onChange={(e) => update({ animalType: e.target.value as Filters['animalType'] })}
+          placeholder="Todos"
+          options={[
+            { value: 'cat', label: '🐱 Gatos' },
+            { value: 'dog', label: '🐶 Perros' },
+          ]}
+        />
 
         {/* Género */}
         <Select

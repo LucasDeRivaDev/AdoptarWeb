@@ -44,13 +44,13 @@ export default async function HomePage() {
               </div>
 
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-800 leading-tight mb-6">
-                Cada gatito merece
+                Cada mascota merece
                 <span className="text-coral-500"> un hogar</span>
                 <span className="text-gray-400"> para siempre</span>
               </h1>
 
               <p className="text-lg text-gray-600 mb-8 leading-relaxed">
-                Conectamos gatitos que buscan familia con personas llenas de amor.
+                Conectamos gatos y perros que buscan familia con personas llenas de amor.
                 Adoptá con responsabilidad, seguí el crecimiento de tu compañero
                 y apoyá a los rescatistas que hacen esto posible.
               </p>
@@ -58,12 +58,12 @@ export default async function HomePage() {
               <div className="flex flex-wrap gap-3">
                 <Link href="/cats">
                   <Button size="lg">
-                    <Heart size={18} /> Ver gatitos disponibles
+                    <Heart size={18} /> Ver mascotas disponibles
                   </Button>
                 </Link>
                 <Link href="/cats/publish">
                   <Button variant="outline" size="lg">
-                    Publicar un gatito
+                    Publicar una mascota
                   </Button>
                 </Link>
               </div>
@@ -99,7 +99,7 @@ export default async function HomePage() {
         <section className="max-w-7xl mx-auto px-4 sm:px-6 py-16">
           <div className="flex items-center justify-between mb-8">
             <div>
-              <h2 className="text-2xl font-bold text-gray-800">Gatitos que esperan por vos</h2>
+              <h2 className="text-2xl font-bold text-gray-800">Mascotas que esperan por vos</h2>
               <p className="text-gray-500 mt-1">Disponibles para adopción ahora mismo</p>
             </div>
             <Link href="/cats" className="text-sm font-medium text-coral-500 hover:text-coral-600 transition-colors">
@@ -131,7 +131,7 @@ export default async function HomePage() {
               {
                 icon: '🔍',
                 title: 'Explorá',
-                desc: 'Navegá por los perfiles de gatitos disponibles cerca tuyo.',
+                desc: 'Navegá por los perfiles de mascotas disponibles cerca tuyo.',
               },
               {
                 icon: '📝',
@@ -173,7 +173,7 @@ export default async function HomePage() {
               icon: Bell,
               color: 'sage',
               title: 'Recordatorios automáticos',
-              desc: 'Te recordamos las vacunas y chequeos por email para que tu gato siempre esté sano.',
+              desc: 'Te recordamos las vacunas y chequeos por email para que tu mascota siempre esté sana.',
             },
             {
               icon: Heart,
@@ -201,16 +201,16 @@ export default async function HomePage() {
       <section className="bg-coral-500 py-16">
         <div className="max-w-3xl mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold text-white mb-4">
-            ¿Tenés un gatito que necesita hogar?
+            ¿Tenés una mascota que necesita hogar?
           </h2>
           <p className="text-coral-100 mb-8">
-            Si sos rescatista o encontraste un gatito en la calle, podés publicarlo en minutos
+            Si sos rescatista o encontraste un gato o perro en la calle, podés publicarlo en minutos
             y conectarte con potenciales adoptantes.
           </p>
           <div className="flex flex-wrap gap-3 justify-center">
             <Link href="/cats/publish">
               <Button variant="outline" size="lg" className="border-white text-white hover:bg-white hover:text-coral-500">
-                Publicar un gatito
+                Publicar una mascota
               </Button>
             </Link>
             <Link href="/donate">

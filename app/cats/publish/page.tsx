@@ -22,10 +22,11 @@ import { PhotoUpload } from '@/components/cats/PhotoUpload';
 import { PawPrint } from 'lucide-react';
 
 const schema = z.object({
+  animalType: z.enum(['cat', 'dog'], { required_error: 'Elegí la especie' }),
   name: z.string().min(1, 'El nombre es requerido').max(50),
   ageMonths: z.number({ invalid_type_error: 'Ingresá la edad' }).min(0).max(300),
   gender: z.enum(['male', 'female'], { required_error: 'Elegí el género' }),
-  description: z.string().min(30, 'Describí al gatito (mínimo 30 caracteres)').max(1000),
+  description: z.string().min(30, 'Describí a la mascota (mínimo 30 caracteres)').max(1000),
   location: z.string().min(2, 'La ubicación es requerida'),
   color: z.string().optional(),
   breed: z.string().optional(),
@@ -94,6 +95,7 @@ function PublishForm() {
 
       // Crear el gato primero para obtener el ID
       const catId = await createCat({
+        animalType: values.animalType,
         name: values.name,
         ageMonths: values.ageMonths,
         gender: values.gender,
@@ -140,8 +142,8 @@ function PublishForm() {
           <PawPrint size={14} className="fill-coral-500" />
           Nueva publicación
         </div>
-        <h1 className="text-2xl font-bold text-gray-800">Publicar un gatito</h1>
-        <p className="text-gray-500 mt-1">Completá el formulario para que el gatito encuentre su hogar.</p>
+        <h1 className="text-2xl font-bold text-gray-800">Publicar una mascota</h1>
+        <p className="text-gray-500 mt-1">Completá el formulario para que la mascota encuentre su hogar.</p>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
@@ -160,6 +162,17 @@ function PublishForm() {
         {/* DATOS BÁSICOS */}
         <section className="bg-white rounded-2xl p-6 shadow-soft space-y-4">
           <h2 className="font-semibold text-gray-800">Datos básicos</h2>
+
+          <Select
+            label="Especie"
+            {...register('animalType')}
+            error={errors.animalType?.message}
+            placeholder="Elegí la especie"
+            options={[
+              { value: 'cat', label: '🐱 Gato' },
+              { value: 'dog', label: '🐶 Perro' },
+            ]}
+          />
 
           <div className="grid grid-cols-2 gap-4">
             <Input
@@ -204,7 +217,7 @@ function PublishForm() {
 
           <Textarea
             label="Descripción"
-            placeholder="Contanos la personalidad del gatito, qué le gusta, si se lleva bien con niños o con otros animales..."
+            placeholder="Contanos la personalidad de la mascota, qué le gusta, si se lleva bien con niños o con otros animales..."
             rows={5}
             {...register('description')}
             error={errors.description?.message}
@@ -242,7 +255,7 @@ function PublishForm() {
         </section>
 
         <Button type="submit" size="lg" className="w-full" loading={isLoading}>
-          {uploading ? 'Subiendo fotos...' : 'Publicar gatito'}
+          {uploading ? 'Subiendo fotos...' : 'Publicar mascota'}
         </Button>
       </form>
     </div>

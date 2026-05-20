@@ -28,8 +28,9 @@ export function CatCard({ cat }: CatCardProps) {
           <div className="absolute top-3 left-3">
             <Badge label={getCatStatusLabel(cat.status)} color={statusColor} />
           </div>
-          {/* Género */}
-          <div className="absolute top-3 right-3">
+          {/* Especie + Género */}
+          <div className="absolute top-3 right-3 flex items-center gap-1">
+            <span className="text-base">{cat.animalType === 'dog' ? '🐶' : '🐱'}</span>
             <span className="text-lg">{cat.gender === 'female' ? '♀' : '♂'}</span>
           </div>
         </div>

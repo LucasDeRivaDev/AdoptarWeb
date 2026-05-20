@@ -41,7 +41,7 @@ export default function CatDetailPage() {
   if (!cat) {
     return (
       <div className="text-center py-20">
-        <p className="text-gray-400 text-lg">Este gatito no existe o fue removido.</p>
+        <p className="text-gray-400 text-lg">Esta mascota no existe o fue removida.</p>
         <Link href="/cats"><Button variant="ghost" className="mt-4">← Volver</Button></Link>
       </div>
     );
@@ -54,7 +54,7 @@ export default function CatDetailPage() {
     <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8">
       {/* Back */}
       <Link href="/cats" className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-coral-500 mb-6 transition-colors">
-        <ArrowLeft size={16} /> Volver a gatitos
+        <ArrowLeft size={16} /> Volver a mascotas
       </Link>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
@@ -71,7 +71,7 @@ export default function CatDetailPage() {
                 priority
               />
             ) : (
-              <div className="h-full flex items-center justify-center text-gray-300 text-6xl">🐱</div>
+              <div className="h-full flex items-center justify-center text-gray-300 text-6xl">{cat.animalType === 'dog' ? '🐶' : '🐱'}</div>
             )}
           </div>
 
@@ -169,7 +169,7 @@ export default function CatDetailPage() {
             </div>
           ) : cat.status !== 'available' ? (
             <div className="p-4 bg-gray-50 rounded-2xl text-center text-gray-500">
-              <p className="font-medium">Este gatito ya fue adoptado 🎉</p>
+              <p className="font-medium">Esta mascota ya fue adoptada 🎉</p>
             </div>
           ) : !user ? (
             <Link href="/login">

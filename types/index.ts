@@ -25,8 +25,9 @@ export interface UserProfile {
   banReason?: string;
 }
 
-// ---- GATO --------------------------------------------------
+// ---- MASCOTA -----------------------------------------------
 
+export type AnimalType = 'cat' | 'dog';
 export type CatStatus = 'available' | 'pending' | 'adopted';
 export type CatGender = 'male' | 'female';
 
@@ -46,6 +47,7 @@ export interface CatCoordinates {
 
 export interface Cat {
   id: string;
+  animalType: AnimalType;
   name: string;
   ageMonths: number; // edad en meses — más fácil de filtrar
   gender: CatGender;
@@ -154,9 +156,10 @@ export interface Foundation extends UserProfile {
 
 // ---- HELPERS -----------------------------------------------
 
-// Para los filtros del grid de gatos
+// Para los filtros del grid de mascotas
 export interface CatFilters {
   location: string;
+  animalType: AnimalType | '';
   gender: CatGender | '';
   vaccinated: boolean | null;
   sterilized: boolean | null;

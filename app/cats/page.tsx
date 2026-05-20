@@ -28,6 +28,7 @@ const CatMap = dynamic(
 
 const DEFAULT_FILTERS: CatFilters = {
   location: '',
+  animalType: '',
   gender: '',
   vaccinated: null,
   sterilized: null,
@@ -61,6 +62,9 @@ export default function CatsPage() {
       const loc = currentFilters.location.toLowerCase();
       result = result.filter((c) => c.location.toLowerCase().includes(loc));
     }
+    if (currentFilters.animalType) {
+      result = result.filter((c) => c.animalType === currentFilters.animalType);
+    }
     if (currentFilters.gender) {
       result = result.filter((c) => c.gender === currentFilters.gender);
     }
@@ -87,9 +91,9 @@ export default function CatsPage() {
       {/* Header */}
       <div className="flex items-start justify-between mb-8 gap-4 flex-wrap">
         <div>
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">Gatitos en adopción</h1>
+          <h1 className="text-3xl font-bold text-gray-800 mb-2">Mascotas en adopción</h1>
           <p className="text-gray-500">
-            {loading ? 'Cargando...' : `${filtered.length} ${filtered.length === 1 ? 'gatito disponible' : 'gatitos disponibles'}`}
+            {loading ? 'Cargando...' : `${filtered.length} ${filtered.length === 1 ? 'mascota disponible' : 'mascotas disponibles'}`}
           </p>
         </div>
 

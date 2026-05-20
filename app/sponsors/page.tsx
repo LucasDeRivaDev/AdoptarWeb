@@ -148,7 +148,7 @@ export default function SponsorsPage() {
         <h1 className="text-3xl font-bold text-gray-800 mb-3">Marcas que apoyan la causa</h1>
         <p className="text-gray-500 max-w-xl mx-auto leading-relaxed">
           Estas empresas creen en la adopción responsable y colaboran activamente con AdopcionWeb
-          para que más gatitos encuentren su hogar.
+          para que más mascotas encuentren su hogar.
         </p>
       </div>
 

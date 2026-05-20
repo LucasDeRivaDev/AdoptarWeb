@@ -39,7 +39,7 @@ export function PhotoUpload({ onFilesChange, maxPhotos = 5 }: PhotoUploadProps) 
   return (
     <div className="space-y-3">
       <label className="text-sm font-medium text-gray-700">
-        Fotos del gatito (hasta {maxPhotos})
+        Fotos de la mascota (hasta {maxPhotos})
       </label>
 
       {/* Grid de previews */}

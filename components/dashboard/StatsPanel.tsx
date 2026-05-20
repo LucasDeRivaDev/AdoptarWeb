@@ -95,7 +95,7 @@ export function StatsPanel({ myCats, receivedApplications, myAdoptionsAsOwner }:
       {/* KPIs — fila 1: gatos */}
       <div>
         <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
-          Mis gatitos
+          Mis mascotas
         </h2>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           <KpiCard
@@ -187,11 +187,11 @@ export function StatsPanel({ myCats, receivedApplications, myAdoptionsAsOwner }:
         {/* Torta: estado de gatos */}
         <div className="bg-white rounded-2xl shadow-soft p-5">
           <h3 className="text-sm font-semibold text-gray-700 mb-4">
-            Estado de mis gatitos
+            Estado de mis mascotas
           </h3>
           {totalCats === 0 ? (
             <div className="flex items-center justify-center h-40 text-gray-400 text-sm">
-              Todavía no publicaste ningún gatito
+              Todavía no publicaste ninguna mascota
             </div>
           ) : (
             <ResponsiveContainer width="100%" height={200}>
@@ -226,8 +226,8 @@ export function StatsPanel({ myCats, receivedApplications, myAdoptionsAsOwner }:
       {/* Mensaje motivador si no hay datos */}
       {totalCats === 0 && totalApplications === 0 && (
         <div className="bg-cream-100 rounded-2xl p-6 text-center">
-          <span className="text-4xl block mb-3">🐱</span>
-          <p className="font-semibold text-gray-700">¡Empezá publicando tu primer gatito!</p>
+          <span className="text-4xl block mb-3">🐾</span>
+          <p className="font-semibold text-gray-700">¡Empezá publicando tu primer mascota!</p>
           <p className="text-sm text-gray-500 mt-1">
             Cuando tengas gatos y solicitudes, acá vas a ver todas tus estadísticas.
           </p>

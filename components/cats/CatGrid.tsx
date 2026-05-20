@@ -30,7 +30,7 @@ export function CatGrid({ cats, loading }: CatGridProps) {
     return (
       <div className="text-center py-20">
         <PawPrint size={48} className="mx-auto text-gray-200 mb-4" />
-        <h3 className="text-lg font-semibold text-gray-500 mb-1">No encontramos gatitos</h3>
+        <h3 className="text-lg font-semibold text-gray-500 mb-1">No encontramos mascotas</h3>
         <p className="text-sm text-gray-400">Probá cambiando los filtros de búsqueda</p>
       </div>
     );

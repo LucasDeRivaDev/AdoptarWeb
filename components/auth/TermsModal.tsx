@@ -73,7 +73,7 @@ export function TermsModal({ userId, userName, onAccepted }: TermsModalProps) {
                 icon: Bell,
                 color: 'amber',
                 title: 'Podemos contactarte',
-                desc: 'Si adoptás un gatito, te enviaremos recordatorios de vacunas y chequeos al email de tu cuenta de Google.',
+                desc: 'Si adoptás una mascota, te enviaremos recordatorios de vacunas y chequeos al email de tu cuenta de Google.',
               },
             ].map(({ icon: Icon, color, title, desc }) => (
               <div key={title} className="flex gap-3 p-3 bg-cream-100 rounded-xl">
@@ -117,7 +117,7 @@ export function TermsModal({ userId, userName, onAccepted }: TermsModalProps) {
               >
                 <Heart size={24} />
                 <span className="text-sm font-medium">Quiero adoptar</span>
-                <span className="text-xs text-center leading-relaxed opacity-70">Busco un gatito para llevar a mi hogar</span>
+                <span className="text-xs text-center leading-relaxed opacity-70">Busco una mascota para llevar a mi hogar</span>
               </button>
               <button
                 onClick={() => setRole('rescuer')}

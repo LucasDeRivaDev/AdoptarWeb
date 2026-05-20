@@ -51,7 +51,7 @@ export default function LoginPage() {
 
           <h1 className="text-2xl font-bold text-gray-800 mb-2">Bienvenido/a</h1>
           <p className="text-gray-500 text-sm mb-8">
-            Iniciá sesión para publicar, adoptar y hacer seguimiento de tus gatitos.
+            Iniciá sesión para publicar, adoptar y hacer seguimiento de tus mascotas.
           </p>
 
           {/* Google Login */}

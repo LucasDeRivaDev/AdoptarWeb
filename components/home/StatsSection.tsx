@@ -69,7 +69,7 @@ export function StatsSection({ stats }: StatsSectionProps) {
         {/* Título */}
         <div className="text-center mb-12">
           <h2 className="text-2xl font-bold text-gray-800 mb-2">El impacto de la comunidad</h2>
-          <p className="text-gray-500">Números reales de gatitos que encontraron su hogar gracias a vos</p>
+          <p className="text-gray-500">Números reales de mascotas que encontraron su hogar gracias a vos</p>
         </div>
 
         {/* Contadores */}

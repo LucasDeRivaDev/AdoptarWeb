@@ -13,7 +13,7 @@ export function Footer() {
               <Logo size={28} textClassName="text-lg" />
             </Link>
             <p className="text-sm text-gray-500 leading-relaxed max-w-xs">
-              Una plataforma que conecta gatitos que buscan hogar con familias llenas de amor.
+              Una plataforma que conecta mascotas que buscan hogar con familias llenas de amor.
               Adoptar es un acto de responsabilidad y ternura.
             </p>
           </div>

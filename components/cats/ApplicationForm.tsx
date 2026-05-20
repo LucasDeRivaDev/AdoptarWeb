@@ -152,7 +152,7 @@ export function ApplicationForm({ cat, onSuccess }: ApplicationFormProps) {
       />
 
       <Textarea
-        label="¿Por qué querés adoptar a este gatito?"
+        label="¿Por qué querés adoptar a esta mascota?"
         placeholder="Contanos tu historia, qué te motivó, qué podés ofrecerle..."
         rows={5}
         {...register('motivation')}
